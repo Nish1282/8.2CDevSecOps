@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/YOUR_USERNAME/8.2CDevSecOps.git'
+        git branch: 'main', url: 'https://github.com/Nish1282/8.2CDevSecOps.git'
       }
     }
 
