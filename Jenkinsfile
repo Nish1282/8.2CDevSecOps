@@ -38,22 +38,13 @@ pipeline {
 
     stage('SonarCloud Analysis') {
       steps {
-        bat '''
-          REM Clean up old sonar-scanner folder with PowerShell (more reliable)
-          powershell -Command "Remove-Item -LiteralPath sonar-scanner-5.0.1.3006-windows -Force -Recurse -ErrorAction SilentlyContinue"
-          
-          REM Delete old sonar-scanner.zip if exists
-          if exist sonar-scanner.zip del /f /q sonar-scanner.zip
-
-          REM Download sonar-scanner CLI
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
-
-          REM Extract sonar-scanner with force overwrite
-          powershell -Command "Expand-Archive -Path sonar-scanner.zip -DestinationPath . -Force"
-
-          REM Run sonar-scanner
-          sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
-        '''
+          withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                bat '''
+                    curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
+                    powershell -Command "Expand-Archive -Path sonar-scanner.zip -DestinationPath ."
+                    set SONAR_TOKEN=%SONAR_TOKEN%
+                    sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
+                '''
       }
     }
   }
