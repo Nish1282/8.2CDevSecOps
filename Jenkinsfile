@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    SONAR_TOKEN = credentials('SONAR_TOKEN') // Placeholder for next step
+    SONAR_TOKEN = credentials('SONAR_TOKEN') // Secure token from Jenkins credentials
   }
 
   stages {
@@ -33,6 +33,17 @@ pipeline {
     stage('NPM Audit (Security Scan)') {
       steps {
         sh 'npm audit || true'
+      }
+    }
+
+    stage('SonarCloud Analysis') {
+      steps {
+        sh '''
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner.zip
+          chmod +x sonar-scanner-*/bin/sonar-scanner
+          ./sonar-scanner-*/bin/sonar-scanner
+        '''
       }
     }
   }
