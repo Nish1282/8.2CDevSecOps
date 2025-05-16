@@ -1,9 +1,6 @@
 pipeline {
   agent any
 
-  environment {
-    SONAR_TOKEN = credentials('SONAR_TOKEN')
-  }
 
   stages 
   {
