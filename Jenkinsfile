@@ -5,7 +5,8 @@ pipeline {
     SONAR_TOKEN = credentials('SONAR_TOKEN')
   }
 
-  stages {
+  stages 
+  {
     stage('Checkout') {
       steps {
         git branch: 'main', url: 'https://github.com/Nish1282/8.2CDevSecOps.git'
@@ -36,15 +37,19 @@ pipeline {
       }
     }
 
-    stage('SonarCloud Analysis') {
-      steps {
-          withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+    stage('SonarCloud Analysis') 
+    {
+      steps 
+      {
+          withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) 
+          {
                 bat '''
                     curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
                     powershell -Command "Expand-Archive -Path sonar-scanner.zip -DestinationPath ."
                     set SONAR_TOKEN=%SONAR_TOKEN%
                     sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat
-                '''
+                          '''
+          }
       }
     }
   }
